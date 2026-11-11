@@ -40,6 +40,23 @@ class ManageSiteSettings extends Page implements HasForms
 
     public function form(Form $form): Form
     {
+        $getPublicImagePreview = static function (Forms\Components\FileUpload $component, string $file, string|array|null $storedFileNames): ?array {
+            $disk = $component->getDisk();
+
+            if (! $disk->exists($file)) {
+                return null;
+            }
+
+            return [
+                'name' => is_array($storedFileNames)
+                    ? ($storedFileNames[$file] ?? basename($file))
+                    : ($storedFileNames ?? basename($file)),
+                'size' => $disk->size($file),
+                'type' => $disk->mimeType($file),
+                'url' => url('/storage/'.$file),
+            ];
+        };
+
         return $form
             ->schema([
                 Forms\Components\Section::make('Logo & Identitas Instansi')
@@ -55,10 +72,14 @@ class ManageSiteSettings extends Page implements HasForms
                         Forms\Components\FileUpload::make('logo_dinas')
                             ->label('Logo Dinas Pariwisata')
                             ->image()
+                            ->disk('public')
+                            ->getUploadedFileUsing($getPublicImagePreview)
                             ->directory('settings'),
                         Forms\Components\FileUpload::make('logo_pariwisata')
                             ->label('Logo Pariwisata Merauke')
                             ->image()
+                            ->disk('public')
+                            ->getUploadedFileUsing($getPublicImagePreview)
                             ->directory('settings'),
                     ])->columns(2),
 
