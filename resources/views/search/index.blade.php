@@ -80,25 +80,43 @@
         </div>
 
         <!-- Results Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             @foreach($results as $result)
-            <a href="{{ $result['url'] }}" class="group flex flex-col bg-white border border-slate-200/80 rounded-2xl p-6 hover:border-[#0066b2] hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300">
-                <div class="mb-4">
-                    <span class="inline-block px-3 py-1.5 bg-slate-100 text-slate-600 group-hover:bg-[#0066b2] group-hover:text-white transition-colors text-[10px] uppercase tracking-wider font-bold rounded-lg">
-                        {{ $result['type'] }}
-                    </span>
+            <a href="{{ $result['url'] }}" class="group flex flex-col bg-white border border-slate-200/80 rounded-2xl overflow-hidden hover:border-[#0066b2] hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                
+                <!-- Image Cover -->
+                <div class="relative aspect-video overflow-hidden bg-slate-100">
+                    <img 
+                        src="{{ $result['image'] ?? asset('images/logodisparmerauke.webp') }}" 
+                        alt="{{ $result['title'] }}"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onerror="this.src='{{ asset('images/logodisparmerauke.webp') }}'"
+                    >
+                    <div class="absolute top-4 left-4">
+                        <span class="inline-block px-3 py-1.5 bg-white/90 backdrop-blur-sm text-[#0066b2] text-[10px] uppercase tracking-wider font-bold rounded-lg shadow-sm">
+                            {{ $result['type'] }}
+                        </span>
+                    </div>
                 </div>
-                <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#0066b2] transition-colors leading-tight mb-2">
-                    {{ $result['title'] }}
-                </h3>
-                @if($result['description'])
-                <p class="text-sm text-slate-500 line-clamp-3 mb-6 grow">
-                    {{ $result['description'] }}
-                </p>
-                @endif
-                <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-[#0066b2]">
-                    <span>Lihat Selengkapnya</span>
-                    <svg class="w-4 h-4 group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+
+                <!-- Content Area -->
+                <div class="p-6 flex flex-col flex-1">
+                    <h3 class="text-lg font-extrabold text-slate-900 group-hover:text-[#0066b2] transition-colors leading-tight mb-3 line-clamp-2">
+                        {{ $result['title'] }}
+                    </h3>
+                    
+                    @if($result['description'])
+                    <p class="text-sm text-slate-500 line-clamp-2 mb-6 grow italic">
+                        {{ $result['description'] }}
+                    </p>
+                    @endif
+
+                    <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-bold text-[#0066b2]">
+                        <span>Selengkapnya</span>
+                        <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-[#0066b2] group-hover:text-white transition-all">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </div>
+                    </div>
                 </div>
             </a>
             @endforeach

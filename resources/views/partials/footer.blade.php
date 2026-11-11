@@ -13,9 +13,9 @@ $siteSetting = $siteSetting ?? \App\Models\SiteSetting::first();
             <div class="md:col-span-6 space-y-4">
                 <div class="flex min-w-0 items-start gap-3 sm:gap-4">
                     <img 
-                        src="{{ $siteSetting?->logo_dinas ? asset('storage/' . $siteSetting->logo_dinas) : asset('images/logodisparmerauke.webp') }}" 
-                        alt="Logo Dinas Pariwisata" 
-                        class="mt-1 h-14 w-auto shrink-0 object-contain sm:h-24"
+                        src="{{ asset('images/Lambang_Kabupaten_Merauke.png') }}" 
+                        alt="Logo Kabupaten Merauke" 
+                        class="h-14 w-auto shrink-0 object-contain sm:h-24"
                     />
                     <div class="min-w-0 space-y-1">
                         <h3 class="break-words text-sm font-bold leading-snug text-slate-900 sm:text-lg">

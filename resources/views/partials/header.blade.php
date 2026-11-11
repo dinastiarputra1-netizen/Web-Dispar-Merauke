@@ -60,35 +60,29 @@ $navItems = [
 @endphp
 
 <!-- Top Header with Logo & Search (Full Width) -->
-<div class="w-full bg-white border-b border-slate-200 py-3 sm:py-4 px-4 sm:px-10">
-    <div class="w-full flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div class="w-full bg-white border-b border-slate-200 py-0 sm:py-0 px-4 sm:px-10">
+    <div class="w-full flex flex-col items-stretch gap-2 py-2 sm:py-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <!-- Brand Logo & Title -->
-        <a href="{{ url('/') }}" class="flex min-w-0 items-center gap-3.5">
+        <a href="{{ url('/') }}" class="flex min-w-0 items-center gap-4">
             <img 
                 src="{{ $siteSetting?->logo_dinas ? asset('storage/' . $siteSetting->logo_dinas) : asset('images/logodisparmerauke.webp') }}" 
                 alt="Logo Dinas Pariwisata" 
-                class="h-12 sm:h-16 w-auto shrink-0 object-contain"
+                class="h-16 sm:h-28 w-auto shrink-0 object-contain"
             />
             <div class="min-w-0">
-                <h1 class="break-words text-sm sm:text-lg font-bold text-slate-900 leading-tight">
+                <h1 class="break-words text-sm sm:text-xl font-bold text-[#0066b2] leading-tight">
                     {{ $siteSetting?->nama_instansi ?? 'Dinas Pariwisata dan Ekonomi Kreatif' }}
                 </h1>
-                <p class="break-words text-xs sm:text-sm font-semibold text-slate-700">
+                <p class="break-words text-xs sm:text-base font-semibold text-[#0066b2]">
                     {{ $siteSetting?->nama_daerah ?? 'Kabupaten Merauke' }}
                 </p>
             </div>
         </a>
 
-        <!-- Top Right: Logo Pariwisata & Search Bar -->
-        <div class="flex w-full items-center gap-4 sm:w-auto sm:gap-6">
-            <img 
-                src="{{ $siteSetting?->logo_pariwisata ? asset('storage/' . $siteSetting->logo_pariwisata) : asset('images/logodispar.webp') }}" 
-                alt="Logo Pariwisata" 
-                class="h-12 sm:h-14 w-auto hidden sm:block object-contain"
-            />
-            
-            <form action="{{ url('/pencarian') }}" method="GET" class="flex w-full items-center gap-2.5 sm:w-auto">
-                <div class="relative flex min-w-0 flex-1 items-center sm:flex-none">
+        <!-- Search Bar -->
+        <div class="flex w-full items-center sm:ml-8 sm:flex-1 sm:justify-end">
+            <form action="{{ url('/pencarian') }}" method="GET" class="flex w-full items-center gap-2.5 sm:max-w-lg">
+                <div class="relative flex min-w-0 flex-1 items-center">
                     <svg class="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
                     </svg>
@@ -98,7 +92,7 @@ $navItems = [
                         name="q" 
                         value="{{ request('q') }}"
                         placeholder="Cari..." 
-                        class="w-full rounded-lg border border-slate-300 bg-white py-2 pl-9 pr-4 text-sm text-slate-800 placeholder-slate-400 focus:border-[#0066b2] focus:outline-none focus:ring-1 focus:ring-[#0066b2] sm:w-64"
+                        class="w-full rounded-lg border border-slate-300 bg-white py-2 pl-9 pr-4 text-sm text-slate-800 placeholder-slate-400 focus:border-[#0066b2] focus:outline-none focus:ring-1 focus:ring-[#0066b2]"
                     />
                 </div>
 
