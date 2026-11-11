@@ -59,7 +59,7 @@
             prose-ol:list-decimal prose-ol:pl-5 prose-ol:mb-4 prose-ol:space-y-2 
             prose-strong:font-bold prose-strong:text-slate-900 
             prose-a:text-[#0066b2] prose-a:no-underline hover:prose-a:underline">
-            {!! \Illuminate\Support\Str::contains($page->content, ['<p>', '<ul>', '<ol>', '<div>', '<br>']) 
+            {!! \Illuminate\Support\Str::contains($page->content, ['<p', '<h1', '<h2', '<h3', '<ul', '<ol', '<li', '<div', '<br', '<hr', '<blockquote', '<pre', '<strong', '<em', '<a '])
                 ? $page->content 
                 : nl2br(e($page->content)) 
             !!}

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/webp" href="{{ asset('images/logodisparmerauke.webp') }}">
     <title>@yield('title', 'Dinas Pariwisata dan Ekonomi Kreatif Kab. Merauke')</title>
     
     {{-- Tailwind CSS & JS via Vite --}}
