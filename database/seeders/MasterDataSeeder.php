@@ -64,5 +64,9 @@ class MasterDataSeeder extends Seeder
             ['slug' => 'profil-lembaga'],
             ['title' => 'Profil Lembaga', 'content' => '<p>Selamat datang di Dinas Pariwisata dan Ekonomi Kreatif Kabupaten Merauke.</p>']
         );
+        Page::firstOrCreate(
+            ['slug' => 'struktur-organisasi'],
+            ['title' => 'Struktur Organisasi', 'content' => null]
+        );
     }
 }

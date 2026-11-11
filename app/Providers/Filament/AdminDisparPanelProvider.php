@@ -31,6 +31,7 @@ class AdminDisparPanelProvider extends PanelProvider
             ->id('Admin-Dispar')
             ->path('admin')
             ->domain(config('admin.panel_domain'))
+            ->favicon(asset('images/logodisparmerauke.webp'))
             ->login(AdminLogin::class)
             ->profile()
             ->passwordReset()
