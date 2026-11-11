@@ -25,7 +25,7 @@ class SearchController extends Controller
                 'type' => $destination->type === 'ekraf' ? 'Ekonomi Kreatif' : 'Destinasi Wisata',
                 'title' => $destination->title,
                 'description' => $destination->location_name ?: $destination->district,
-                'image' => $destination->main_image ? asset('storage/' . $destination->main_image) : null,
+                'image' => $destination->featured_image ? asset('storage/' . $destination->featured_image) : null,
                 'url' => $destination->type === 'ekraf' ? route('ekraf.show', $destination->slug) : route('wisata.show', $destination->slug),
             ])->toArray();
 
@@ -35,7 +35,7 @@ class SearchController extends Controller
                 'type' => 'Agenda & Berita',
                 'title' => $agenda->title,
                 'description' => $agenda->event_date ? $agenda->event_date->translatedFormat('d F Y') : '',
-                'image' => $agenda->cover_image ? asset('storage/' . $agenda->cover_image) : null,
+                'image' => $agenda->featured_image ? asset('storage/' . $agenda->featured_image) : null,
                 'url' => route('agenda.show', $agenda->slug),
             ])->toArray();
 

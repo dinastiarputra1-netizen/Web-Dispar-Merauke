@@ -93,7 +93,7 @@
                         onerror="this.src='{{ asset('images/logodisparmerauke.webp') }}'"
                     >
                     <div class="absolute top-4 left-4">
-                        <span class="inline-block px-3 py-1.5 bg-white/90 backdrop-blur-sm text-[#0066b2] text-[10px] uppercase tracking-wider font-bold rounded-lg shadow-sm">
+                        <span class="inline-block px-3.5 py-1.5 bg-[#0066b2] text-white text-[10px] uppercase tracking-wider font-extrabold rounded-lg shadow-md">
                             {{ $result['type'] }}
                         </span>
                     </div>
