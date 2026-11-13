@@ -43,10 +43,6 @@ $navItems = [
                             ['name' => 'Restoran', 'href' => url('/statistik/akomodasi/restoran')],
                         ]
                     ],
-                    ['name' => 'Statistik Usaha Restoran', 'href' => url('/statistik/usaha-restoran')],
-                    ['name' => 'Statistik Jasa Perjalanan', 'href' => url('/statistik/jasa-perjalanan')],
-                    ['name' => 'Statistik Satelit Pariwisata', 'href' => url('/statistik/satelit-pariwisata')],
-                    ['name' => 'Statistik Devisa Pariwisata', 'href' => url('/statistik/devisa-pariwisata')],
                 ]
             ],
             ['name' => 'Statistik Ekonomi Kreatif', 'href' => url('/statistik/ekonomi-kreatif')],
