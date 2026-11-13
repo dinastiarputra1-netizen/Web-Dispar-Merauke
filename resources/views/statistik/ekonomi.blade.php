@@ -45,157 +45,26 @@
 <section class="w-full bg-[#f8fafc] py-8 sm:py-12 min-h-screen">
     <div class="w-full px-6 sm:px-12 lg:px-16 space-y-8">
 
-        <!-- 1. KARTU INDIKATOR RINGKASAN TREN (SEKARANG DINAMIS BERDASARKAN TAHUN TERPILIH) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200/80 shadow-2xs space-y-2 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-2 h-full bg-[#0066b2]"></div>
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide block">Total Aktivitas ({{ $tahun }})</span>
-                <p class="text-2xl sm:text-3xl font-black text-[#0066b2]">
-                    {{ number_format($totalSelectedYear, 0, ',', '.') }}
-                </p>
-                <p class="text-xs text-slate-400 font-medium">Transaksi / Produk Terdaftar</p>
-            </div>
-
-            <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200/80 shadow-2xs space-y-2 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide block">Puncak Capaian</span>
-                <p class="text-2xl sm:text-3xl font-black text-emerald-600">
-                    {{ number_format($puncakValue, 0, ',', '.') }}
-                </p>
-                <p class="text-xs text-slate-400 font-medium">{{ $puncakQuarterText }}</p>
-            </div>
-
-            <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200/80 shadow-2xs space-y-2 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide block">Rata-Rata Triwulan ({{ $tahun }})</span>
-                <p class="text-2xl sm:text-3xl font-black text-amber-600">
-                    {{ number_format($totalSelectedYear / 4, 0, ',', '.') }}
-                </p>
-                <p class="text-xs text-slate-400 font-medium">Capaian / Triwulan</p>
-            </div>
-
-            <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200/80 shadow-2xs space-y-2 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-2 h-full {{ $growthPercentage >= 0 ? 'bg-emerald-500' : 'bg-rose-500' }}"></div>
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide block">Pertumbuhan YoY</span>
-                <p class="text-2xl sm:text-3xl font-black {{ $growthPercentage >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">
-                    {{ $growthPercentage > 0 ? '+'.$growthPercentage : $growthPercentage }}%
-                </p>
-                <p class="text-xs text-slate-400 font-medium">Dibandingkan Tahun {{ $tahun - 1 }}</p>
-            </div>
-        </div>
-
-        <!-- 2. VISUALISASI LINE CHART MULTI-TAHUN PER TRIWULAN -->
-        <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6" x-data="{ viewRange: '5' }">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
-                <div>
-                    <h3 class="font-bold text-slate-900 text-base sm:text-lg flex items-center gap-2">
-                        <svg class="w-5 h-5 text-[#0066b2]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                        </svg>
-                        <span>Grafik Tren Perkembangan Ekonomi Kreatif Per Triwulan</span>
-                    </h3>
-                    <p class="text-xs text-slate-500 pt-0.5">
-                        @if(!empty($yearlyData))
-                            Perbandingan pola tren perkembangan sektor ekraf antar tahun ({{ array_key_first($yearlyData) }} - {{ $latestYearInChart }})
-                        @else
-                            Perbandingan pola tren perkembangan sektor ekraf antar tahun
-                        @endif
-                    </p>
-                </div>
-
-                <!-- Toggle Mode Tampilan Chart -->
-                <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80 shrink-0 self-start sm:self-auto">
-                    <button 
-                        @click="viewRange = '5'; window.updateEkrafChartFilter('5')" 
-                        type="button" 
-                        :class="viewRange === '5' ? 'bg-white text-[#0066b2] font-bold shadow-2xs' : 'text-slate-600 hover:text-slate-900 font-medium'"
-                        class="px-3 py-1.5 rounded-lg text-xs transition-all cursor-pointer"
-                    >
-                        5 Tahun Terakhir
-                    </button>
-                    <button 
-                        @click="viewRange = 'all'; window.updateEkrafChartFilter('all')" 
-                        type="button" 
-                        :class="viewRange === 'all' ? 'bg-white text-[#0066b2] font-bold shadow-2xs' : 'text-slate-600 hover:text-slate-900 font-medium'"
-                        class="px-3 py-1.5 rounded-lg text-xs transition-all cursor-pointer"
-                    >
-                        Semua Tahun
-                    </button>
-                </div>
-            </div>
-
-            <!-- Chart Canvas Container -->
-            <div class="w-full h-96 sm:h-112.5">
-                <canvas id="ekrafLineChart"></canvas>
-            </div>
-        </div>
-
-        <!-- 3. KARTU INDIKATOR MAKRO & METRIK TERDAFTAR DARI DATABASE -->
-        <div class="space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2">
-                    <svg class="w-5 h-5 text-[#0066b2]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                    </svg>
-                    <span>Indikator Capaian Terdaftar (Tahun {{ $tahun }})</span>
-                </h3>
-                <span class="text-xs font-semibold bg-blue-50 text-[#0066b2] px-3 py-1 rounded-full">
-                    {{ count($macroIndicators) }} Indikator Terdata
-                </span>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                @forelse($macroIndicators as $item)
-                    @php
-                        $indikator = $item->indicator_label ?? $item->indicator ?? $item->indikator ?? 'Indikator';
-                        $nilai = $item->value ?? $item->nilai ?? 0;
-                        $satuan = $item->unit ?? $item->satuan ?? '-';
-                        $subSektor = $item->sub_category ?? null;
-                        $catatan = $item->notes ?? null;
-                    @endphp
-                    <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all space-y-3 flex flex-col justify-between">
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">
-                                    {{ $indikator }}
-                                </span>
-                                @if($subSektor)
-                                    <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full shrink-0">
-                                        {{ $subSektor }}
-                                    </span>
-                                @else
-                                    <span class="bg-blue-50 text-[#0066b2] text-[10px] font-bold px-2.5 py-0.5 rounded-full shrink-0">
-                                        Umum
-                                    </span>
-                                @endif
-                            </div>
-
-                            <p class="text-2xl sm:text-3xl font-black text-[#0066b2] tracking-tight">
-                                {{ is_numeric($nilai) ? number_format($nilai, 0, ',', '.') : $nilai }}
-                                <span class="text-xs font-semibold text-slate-500 tracking-normal ml-0.5">{{ $satuan }}</span>
-                            </p>
-                        </div>
-
-                        @if($catatan)
-                            <p class="text-[11px] text-slate-400 italic pt-2 border-t border-slate-100 line-clamp-2">
-                                * {{ $catatan }}
-                            </p>
-                        @endif
-                    </div>
-                @empty
-                    <div class="col-span-full bg-white p-8 rounded-xl border border-slate-200/80 text-center text-slate-500 text-xs sm:text-sm space-y-1">
-                        <p class="font-bold text-slate-700">Belum Ada Indikator Spesifik</p>
-                        <p>Tidak ada data indikator makro terdaftar yang diinput untuk tahun {{ $tahun }}.</p>
-                    </div>
-                @endforelse
-            </div>
-        </div>
-
         <!-- KARTU DATA KELOMPOK EKRAF DENGAN TABEL RESPONSIVE -->
         <section class="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
-            <div class="border-b border-slate-100 px-5 py-5 sm:px-7">
-                <h3 class="font-bold text-slate-900 text-lg">Data Kelompok Ekonomi Kreatif ({{ $tahun }})</h3>
-                <p class="mt-1 text-sm text-slate-500">Komposisi kelompok berdasarkan kategori OAP dan Non-OAP.</p>
+            <div class="border-b border-slate-100 px-5 py-5 sm:px-7 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h3 class="font-bold text-slate-900 text-lg">Data Kelompok Ekonomi Kreatif ({{ $tahun }})</h3>
+                    <p class="mt-1 text-sm text-slate-500">Komposisi kelompok berdasarkan kategori OAP dan Non-OAP.</p>
+                </div>
+                
+                <!-- Filter Cepat OAP / Non-OAP -->
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('statistik.ekraf', ['tahun' => $tahun, 'cari' => $groupSearch]) }}" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all {{ empty($oapFilter) ? 'bg-[#0066b2] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                        Semua
+                    </a>
+                    <a href="{{ route('statistik.ekraf', ['tahun' => $tahun, 'oap_filter' => 'OAP', 'cari' => $groupSearch]) }}" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all {{ $oapFilter === 'OAP' ? 'bg-[#0066b2] text-white shadow-sm' : 'bg-sky-100 text-sky-800 hover:bg-sky-200' }}">
+                        OAP Saja
+                    </a>
+                    <a href="{{ route('statistik.ekraf', ['tahun' => $tahun, 'oap_filter' => 'Non-OAP', 'cari' => $groupSearch]) }}" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all {{ $oapFilter === 'Non-OAP' ? 'bg-[#0066b2] text-white shadow-sm' : 'bg-cyan-100 text-cyan-800 hover:bg-cyan-200' }}">
+                        Non-OAP Saja
+                    </a>
+                </div>
             </div>
 
             <div class="mx-auto h-64 max-w-xl px-5 py-5 sm:h-80 sm:px-7">
@@ -205,6 +74,9 @@
             <div class="border-t border-slate-100 px-5 py-5 sm:px-7">
                 <form action="{{ route('statistik.ekraf') }}" method="GET" class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <input type="hidden" name="tahun" value="{{ $tahun }}">
+                    @if($oapFilter)
+                        <input type="hidden" name="oap_filter" value="{{ $oapFilter }}">
+                    @endif
                     <label class="sr-only" for="cari-kelompok-ekraf">Cari kelompok ekonomi kreatif</label>
                     <input
                         id="cari-kelompok-ekraf"
@@ -214,7 +86,12 @@
                         placeholder="Cari kelompok, ketua, subsektor..."
                         class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-800 placeholder-slate-400 focus:border-[#0066b2] focus:outline-none focus:ring-1 focus:ring-[#0066b2] sm:max-w-sm"
                     >
-                    <button type="submit" class="rounded-lg bg-[#0066b2] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#005596]">Cari</button>
+                    <div class="flex items-center gap-2">
+                        <button type="submit" class="rounded-lg bg-[#0066b2] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#005596]">Cari</button>
+                        @if($groupSearch || $oapFilter)
+                            <a href="{{ route('statistik.ekraf', ['tahun' => $tahun]) }}" class="rounded-lg bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300 transition-colors">Reset</a>
+                        @endif
+                    </div>
                 </form>
 
                 <!-- Container Tabel: Border hilang di HP, muncul di layar besar -->
@@ -289,78 +166,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const ctxLine = document.getElementById('ekrafLineChart').getContext('2d');
-        const labelsQuarter = ['Triwulan I', 'Triwulan II', 'Triwulan III', 'Triwulan IV'];
-        const rawYearlyData = {!! json_encode($yearlyData) !!};
-        const selectedYear = '{{ $tahun }}';
-
-        const colorPalette = [
-            '#38bdf8', '#475569', '#22c55e', '#f97316', 
-            '#6366f1', '#ec4899', '#eab308', '#06b6d4', '#8b5cf6'
-        ];
-
-        const allYears = Object.keys(rawYearlyData);
-
-        function buildEkrafDatasets(filterMode) {
-            let selectedYears = allYears;
-            if (filterMode === '5' && allYears.length > 5) {
-                selectedYears = allYears.slice(-5);
-            }
-
-            return selectedYears.map((year, index) => {
-                const color = colorPalette[index % colorPalette.length];
-                const isSelected = String(year) === String(selectedYear);
-
-                return {
-                    label: 'Tahun ' + year,
-                    data: rawYearlyData[year],
-                    borderColor: color,
-                    backgroundColor: color + '1A',
-                    borderWidth: isSelected ? 3.5 : 2,
-                    tension: 0.3,
-                    pointRadius: isSelected ? 5 : 4,
-                    pointHoverRadius: 7,
-                    pointBackgroundColor: color,
-                };
-            });
-        }
-
-        const ekrafLineChart = new Chart(ctxLine, {
-            type: 'line',
-            data: { labels: labelsQuarter, datasets: buildEkrafDatasets('5') },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { mode: 'index', intersect: false },
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { usePointStyle: true, padding: 20, font: { size: 12 } }
-                    },
-                    tooltip: {
-                        backgroundColor: '#0f172a',
-                        titleFont: { size: 13, weight: 'bold' },
-                        bodyFont: { size: 12 },
-                        padding: 12,
-                        cornerRadius: 10,
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { callback: function(v) { return v.toLocaleString('id-ID'); }, font: { size: 11 } },
-                        grid: { color: '#f1f5f9' }
-                    },
-                    x: { grid: { display: false }, ticks: { font: { size: 12, weight: 'bold' } } }
-                }
-            }
-        });
-
-        window.updateEkrafChartFilter = function(mode) {
-            ekrafLineChart.data.datasets = buildEkrafDatasets(mode);
-            ekrafLineChart.update();
-        };
-
         const groupChartCanvas = document.getElementById('ekrafGroupDoughnut');
         const groupCounts = @json([(int) ($groupCounts['OAP'] ?? 0), (int) ($groupCounts['Non-OAP'] ?? 0)]);
 
@@ -382,12 +187,14 @@
                 plugins: {
                     legend: { position: 'bottom', labels: { usePointStyle: true, padding: 18 } },
                     tooltip: {
-                        callbacks: {
-                            label: (context) => ` ${context.label}: ${context.raw.toLocaleString('id-ID')} kelompok`,
-                        },
-                    },
-                },
-            },
+                        backgroundColor: '#0f172a',
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 12 },
+                        padding: 12,
+                        cornerRadius: 10,
+                    }
+                }
+            }
         });
     });
 </script>

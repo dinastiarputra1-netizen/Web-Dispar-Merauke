@@ -38,6 +38,11 @@ class CreativeEconomyController extends Controller
             ->pluck('total', 'classification');
         $groupQuery = CreativeEconomyGroup::query()->where('year', $tahun);
         $groupSearch = trim((string) $request->query('cari', ''));
+        $oapFilter = trim((string) $request->query('oap_filter', ''));
+
+        if ($oapFilter !== '' && in_array($oapFilter, ['OAP', 'Non-OAP'], true)) {
+            $groupQuery->where('classification', $oapFilter);
+        }
 
         if ($groupSearch !== '') {
             $groupQuery->where(function (Builder $query) use ($groupSearch): void {
@@ -54,66 +59,13 @@ class CreativeEconomyController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        // 3. Data Line Chart Tren Pertriwulan Multi-Tahun
-        $rawTrendData = CreativeEconomyStatistic::selectRaw('
-                year,
-                SUM(CASE WHEN month IN (1,2,3) THEN value ELSE 0 END) as q1,
-                SUM(CASE WHEN month IN (4,5,6) THEN value ELSE 0 END) as q2,
-                SUM(CASE WHEN month IN (7,8,9) THEN value ELSE 0 END) as q3,
-                SUM(CASE WHEN month IN (10,11,12) THEN value ELSE 0 END) as q4,
-                SUM(value) as total_val
-            ')
-            ->groupBy('year')
-            ->orderBy('year', 'asc')
-            ->get();
-
-        $yearlyData = [];
-        foreach ($rawTrendData as $row) {
-            if ($row->q1 == 0 && $row->q2 == 0 && $row->q3 == 0 && $row->q4 == 0 && $row->total_val > 0) {
-                $portion = round($row->total_val / 4, 2);
-                $yearlyData[$row->year] = [$portion, $portion, $portion, $portion];
-            } else {
-                $yearlyData[$row->year] = [(float) $row->q1, (float) $row->q2, (float) $row->q3, (float) $row->q4];
-            }
-        }
-
-        // 4. Kalkulasi Kartu Ringkasan Indikator Tren Berdasarkan TAHUN TERPILIH ($tahun)
-        $selectedYearData = $yearlyData[$tahun] ?? [0, 0, 0, 0];
-        $totalSelectedYear = array_sum($selectedYearData);
-
-        $maxQuarterVal = max($selectedYearData);
-        $maxQuarterIndex = array_search($maxQuarterVal, $selectedYearData);
-        $quarterNames = ['Triwulan I', 'Triwulan II', 'Triwulan III', 'Triwulan IV'];
-
-        $puncakValue = $maxQuarterVal;
-        $puncakQuarterText = $maxQuarterVal > 0
-            ? $quarterNames[$maxQuarterIndex]." (Tahun {$tahun})"
-            : '-';
-
-        // Hitung Pertumbuhan YoY (Tahun Terpilih vs Tahun Sebelumnya)
-        $prevYear = $tahun - 1;
-        if (isset($yearlyData[$prevYear]) && array_sum($yearlyData[$prevYear]) > 0) {
-            $totalPrevYear = array_sum($yearlyData[$prevYear]);
-            $growthPercentage = number_format((($totalSelectedYear - $totalPrevYear) / $totalPrevYear) * 100, 1);
-        } else {
-            $growthPercentage = 0;
-        }
-
-        $latestYearInChart = ! empty($yearlyData) ? array_key_last($yearlyData) : date('Y');
-
         return view('statistik.ekonomi', compact(
-            'macroIndicators',
             'creativeEconomyGroups',
             'groupCounts',
             'groupSearch',
+            'oapFilter',
             'availableYears',
-            'tahun',
-            'yearlyData',
-            'totalSelectedYear',
-            'puncakValue',
-            'puncakQuarterText',
-            'growthPercentage',
-            'latestYearInChart'
+            'tahun'
         ));
     }
 }
