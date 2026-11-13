@@ -59,6 +59,22 @@ class AgendaResource extends Resource
                             ->image()
                             ->directory('agendas'),
 
+                        Forms\Components\TextInput::make('youtube_url')
+                            ->label('URL Video YouTube')
+                            ->url()
+                            ->maxLength(2048)
+                            ->placeholder('https://www.youtube.com/watch?v=...')
+                            ->helperText('Tempel tautan video YouTube. Video akan ditampilkan di atas galeri foto.'),
+
+                        Forms\Components\FileUpload::make('gallery_images')
+                            ->label('Galeri Foto (maksimal 3)')
+                            ->image()
+                            ->multiple()
+                            ->maxFiles(3)
+                            ->reorderable()
+                            ->directory('agendas/gallery')
+                            ->columnSpanFull(),
+
                         Forms\Components\RichEditor::make('content')
                             ->label('Isi Agenda/Berita')
                             ->required()

@@ -11,7 +11,7 @@
             <!-- Konten Utama (Left) -->
             <div class="lg:col-span-8 space-y-6">
                 
-                <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
+                <div class="space-y-6">
                     
                     <!-- Title & Meta -->
                     <div class="space-y-3 border-b border-slate-100 pb-5">
@@ -43,14 +43,48 @@
                         </div>
                     </div>
 
-                    <!-- Gambar Utama -->
-                    @if($agenda->featured_image)
-                        <div class="aspect-video w-full overflow-hidden rounded-xl bg-slate-100 shadow-inner">
-                            <img 
-                                src="{{ asset('storage/' . $agenda->featured_image) }}" 
-                                alt="{{ $agenda->title }}" 
-                                class="w-full h-full object-cover"
+                    @php
+                        $galleryImages = array_values(array_filter($agenda->gallery_images ?? []));
+
+                        if ($galleryImages === [] && $agenda->youtube_embed_url && $agenda->featured_image) {
+                            $galleryImages = [$agenda->featured_image];
+                        }
+                    @endphp
+
+                    @if($agenda->youtube_embed_url)
+                        <div class="aspect-video w-full overflow-hidden rounded-xl border border-slate-200 bg-black shadow-sm">
+                            <iframe
+                                src="{{ $agenda->youtube_embed_url }}"
+                                title="Video {{ $agenda->title }}"
+                                class="h-full w-full border-0"
+                                loading="lazy"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen
+                            ></iframe>
+                        </div>
+                    @else
+                        <div class="aspect-video w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-sm">
+                            <img
+                                src="{{ $agenda->featured_image ? asset('storage/' . $agenda->featured_image) : 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80' }}"
+                                alt="{{ $agenda->title }}"
+                                class="h-full w-full object-cover"
                             />
+                        </div>
+                    @endif
+
+                    @if($galleryImages !== [])
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3" aria-label="Galeri foto {{ $agenda->title }}">
+                            @foreach(array_slice($galleryImages, 0, 3) as $index => $imagePath)
+                                <div class="aspect-[4/3] overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+                                    <img
+                                        src="{{ asset('storage/' . $imagePath) }}"
+                                        alt="{{ $agenda->title }} - Foto {{ $index + 1 }}"
+                                        class="h-full w-full object-cover"
+                                        loading="lazy"
+                                    />
+                                </div>
+                            @endforeach
                         </div>
                     @endif
 
