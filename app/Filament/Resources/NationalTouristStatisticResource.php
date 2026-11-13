@@ -19,7 +19,7 @@ class NationalTouristStatisticResource extends Resource
 
     protected static ?string $navigationGroup = 'Data & Statistik';
 
-    protected static ?string $navigationLabel = 'Wisatawan Nasional';
+    protected static ?string $navigationLabel = 'Wisatawan Nusantara dan Mancanegara';
 
     protected static ?int $navigationSort = 3;
 
@@ -30,7 +30,7 @@ class NationalTouristStatisticResource extends Resource
                 Forms\Components\Hidden::make('statistic_category_id')
                     ->default(fn () => StatisticCategory::where('slug', 'wisatawan-nasional')->value('id')),
 
-                Forms\Components\Section::make('Input Data Kunjungan Wisatawan Nasional')
+                Forms\Components\Section::make('Input Data Kunjungan Wisatawan Nusantara dan Mancanegara')
                     ->schema([
                         Forms\Components\TextInput::make('year')
                             ->label('Tahun Data')
