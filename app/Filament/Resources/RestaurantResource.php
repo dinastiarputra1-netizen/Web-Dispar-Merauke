@@ -51,6 +51,16 @@ class RestaurantResource extends Resource
                     ->label('Alamat Lengkap')
                     ->columnSpanFull(),
 
+                Forms\Components\TextInput::make('website_url')
+                    ->label('URL Website')
+                    ->url()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('maps_url')
+                    ->label('URL Google Maps')
+                    ->url()
+                    ->maxLength(255),
+
                 Forms\Components\Toggle::make('is_active')
                     ->label('Status Aktif')
                     ->default(true)

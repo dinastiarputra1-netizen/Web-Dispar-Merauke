@@ -108,6 +108,7 @@
                             <th class="py-3.5 px-6 text-center w-52">Jenis Usaha</th>
                             <th class="py-3.5 px-6 w-56">No. Izin Usaha</th>
                             <th class="py-3.5 px-6">Alamat Lengkap</th>
+                            <th class="py-3.5 px-6 text-center w-44">Tautan & Lokasi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200 text-sm text-slate-700">
@@ -119,7 +120,7 @@
 
                             <!-- Sub-Header Kategori -->
                             <tr class="bg-slate-100 font-bold text-slate-900 border-t border-b border-slate-300">
-                                <td colspan="5" class="py-3 px-6 text-slate-900 text-sm">
+                                <td colspan="6" class="py-3 px-6 text-slate-900 text-sm">
                                     {{ $groupTitle }}
                                 </td>
                             </tr>
@@ -131,6 +132,8 @@
                                     $restoJenis = $resto->business_type ?? $resto->jenis_usaha ?? '-';
                                     $restoIzin = $resto->license_number ?? $resto->no_izin_usaha ?? '-';
                                     $restoAddress = $resto->address ?? $resto->alamat_lengkap ?? '-';
+                                    $restoWebsite = $resto->website_url ?? $resto->website ?? $resto->url_web ?? null;
+                                    $restoMaps = $resto->maps_url ?? $resto->google_maps_url ?? $resto->google_maps ?? $resto->maps ?? $resto->link_maps ?? null;
                                 @endphp
                                 <tr class="hover:bg-blue-50/30 transition-colors">
                                     <td class="py-3.5 px-4 text-center font-medium text-slate-600">{{ $index + 1 }}.{{ $groupCode }}</td>
@@ -142,9 +145,26 @@
                                     </td>
                                     <td class="py-3.5 px-6 font-mono text-slate-700 text-xs">{{ $restoIzin }}</td>
                                     <td class="py-3.5 px-6 text-slate-600">{{ $restoAddress }}</td>
+                                    <td class="py-3.5 px-6 text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                            @if(!empty($restoWebsite))
+                                                <a href="{{ $restoWebsite }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold bg-blue-50 text-[#0066b2] hover:bg-[#0066b2] hover:text-white transition-colors border border-blue-200" title="Kunjungi Website Resmi">
+                                                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                                                </a>
+                                            @endif
+                                            @if(!empty($restoMaps))
+                                                <a href="{{ $restoMaps }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-colors border border-emerald-200" title="Buka Lokasi Google Maps">
+                                                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5C10.62 11.5 9.5 10.38 9.5 9S10.62 6.5 12 6.5 14.5 7.62 14.5 9 13.38 11.5 12 11.5z"/></svg>
+                                                </a>
+                                            @endif
+                                            @if(empty($restoWebsite) && empty($restoMaps))
+                                                <span class="text-slate-400 font-normal">-</span>
+                                            @endif
+                                        </div>
+                                    </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="5" class="py-4 px-6 text-slate-400 italic text-xs text-center">Tidak ada data untuk {{ $groupTitle }}.</td></tr>
+                                <tr><td colspan="6" class="py-4 px-6 text-slate-400 italic text-xs text-center">Tidak ada data untuk {{ $groupTitle }}.</td></tr>
                             @endforelse
                         @endforeach
                     </tbody>
@@ -170,6 +190,8 @@
                                 $restoJenis = $resto->business_type ?? $resto->jenis_usaha ?? '-';
                                 $restoIzin = $resto->license_number ?? $resto->no_izin_usaha ?? '-';
                                 $restoAddress = $resto->address ?? $resto->alamat_lengkap ?? '-';
+                                $restoWebsite = $resto->website_url ?? $resto->website ?? $resto->url_web ?? null;
+                                $restoMaps = $resto->maps_url ?? $resto->google_maps_url ?? $resto->google_maps ?? $resto->maps ?? $resto->link_maps ?? null;
                             @endphp
 
                             <!-- Card Resto -->
@@ -201,6 +223,21 @@
                                     <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider shrink-0">No. Izin Usaha:</span>
                                     <span class="font-mono text-slate-700 text-[11px] sm:text-xs bg-slate-50 px-2 py-1 rounded border border-slate-100 text-right truncate">{{ $restoIzin }}</span>
                                 </div>
+
+                                @if($restoWebsite || $restoMaps)
+                                    <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-end gap-1.5">
+                                        @if($restoWebsite)
+                                            <a href="{{ $restoWebsite }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold bg-blue-50 text-[#0066b2] border border-blue-100" aria-label="Website">
+                                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                                            </a>
+                                        @endif
+                                        @if($restoMaps)
+                                            <a href="{{ $restoMaps }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100" aria-label="Maps">
+                                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5C10.62 11.5 9.5 10.38 9.5 9S10.62 6.5 12 6.5 14.5 7.62 14.5 9 13.38 11.5 12 11.5z"/></svg>
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         @empty
                             <div class="p-4 text-slate-400 italic text-xs text-center border border-dashed border-slate-300 rounded-lg">
